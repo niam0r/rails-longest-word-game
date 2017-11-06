@@ -14,7 +14,12 @@ class GamesController < ApplicationController
       @letters = params[:letters]
       @start_time = DateTime.parse(params[:time])
       @end_time = Time.now
-      @result = run_game(@attempt, @letters, @start_time, @end_time)
+      run_game(@attempt, @letters, @start_time, @end_time)
+      if session[:total].nil?
+        session[:total] = @score
+      else
+        session[:total] += @score
+      end
   end
 
   def in_the_grid?(attempt, letters)
@@ -31,24 +36,21 @@ class GamesController < ApplicationController
   end
 
   def run_game(attempt, letters, start_time, end_time)
-    result = { score: 0 }
     if !english?(attempt)
-      result[:message] = "Not an english word"
+      @message = "Not an english word"
     elsif !in_the_grid?(attempt, letters)
-      result[:message] = "The given word is not included in the given letters"
+      @message = "The given word is not included in the given letters"
     else
       return compute_score(attempt, letters, start_time, end_time)
     end
-    result
+
   end
 
   def compute_score(attempt, letters, start_time, end_time)
-    result = {}
-    result[:time] = (end_time - start_time)
+    @time = (end_time - start_time)
     length = 1 / (letters.length - attempt.length).to_f
-    result[:score] = (1 / result[:time]) * length
-    result[:message] = "Well done"
-    return result
+    @score = ((1 /@time) * length  * 10000).to_i
+    @message = "Well done"
   end
 end
 
