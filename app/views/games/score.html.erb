@@ -1,0 +1,18 @@
+<div class="text-center">
+
+<h1>Game's score</h1>
+
+<h2>Your word is: <%= params[:attempt] %></h2>
+
+<h3>Time Taken to answer: <%= @result[:time].to_i %> seconds</h3>
+
+<h3>Your Score: <%= (@result[:score] * 10000).to_i %></h3>
+
+<h3><%= @result[:message] %></h3>
+
+<h2><%= link_to "Play a new game!", new_path %></h2>
+
+</div>
+
+
+
